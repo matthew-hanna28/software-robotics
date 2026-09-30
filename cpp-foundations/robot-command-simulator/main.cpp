@@ -9,6 +9,7 @@ int main()
     int position = 0;
     double temperature = 36.5;
     bool active = true;
+    int time;
 
     std::cout << "battery: " <<battery << "\n";
     std::cout << "speed: " << speed << "\n";
@@ -16,14 +17,22 @@ int main()
     std::cout << "temperature: " << temperature << "\n";
     std::cout << "active: " << active << "\n";
 
-    position = speed * 5;
-
-    std::cout << "New position: " << position << "\n";
-
     battery = battery - 20;
 
     std::cout << "Battery after movement: " << battery << "\n";
 
+    std::cout << "How many seconds should the robot move? ";
+
+    std::cin >> time;
+
+    position = speed * time;
+
+    std::cout << "New position: " << position << "\n";
+
+    for (int i = 0; i < 5; i++)
+    {
+        std::cout << "Robot is processing movement...\n";
+    }
 
     return 0;
 }
