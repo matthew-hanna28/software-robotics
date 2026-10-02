@@ -1,5 +1,10 @@
 #include <iostream>
 
+void moveForward(int& position, int speed)
+{
+    position = position + speed;
+}
+
 int main()
 {
     std::cout << "Robot Command Simulator\n";
@@ -19,19 +24,20 @@ int main()
 
     battery = battery - 20;
 
-    std::cout << "Battery after movement: " << battery << "\n";
+     std::cout << "Battery after movement: " << battery << "\n";
 
-    std::cout << "How many seconds should the robot move? ";
+   // std::cout << "How many seconds should the robot move? ";
 
-    std::cin >> time;
+   // std::cin >> time;
 
-    position = speed * time;
+   // position = speed * time;
 
-    std::cout << "New position: " << position << "\n";
+   // std::cout << "New position: " << position << "\n";
 
     for (int i = 0; i < 5; i++)
     {
-        std::cout << "Robot is processing movement...\n";
+        moveForward(position, speed);
+        std::cout << "position = " << position << "\n";
     }
 
     return 0;
