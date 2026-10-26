@@ -40,10 +40,10 @@ class Robot
         speed = startingSpeed;
         position = startingPosition;
     }
-    void move()
-    {
-        position = position + speed;
-    }
+    virtual void move()
+{
+    std::cout << "Robot is moving!\n";
+}
 
     int getPosition()
     {
@@ -79,6 +79,15 @@ class WheeledRobot : public Robot
         : Robot(battery, speed, position)
     {
     }
+
+    void honk()
+    {
+        std::cout << "Beep beeeeep!\n";
+    }
+    void move() override
+{
+    std::cout << "Wheeled robot is driving!\n";
+}
 };
 
 int main()
@@ -186,7 +195,11 @@ int main()
    
     WheeledRobot myWheeledRobot(100, 10, 0);
     myWheeledRobot.charge();
+    myWheeledRobot.move();
     myWheeledRobot.honk();
-
+    std::cout << "Wheeled Robot position: " << myWheeledRobot.getPosition() << "\n";
     return 0;
+
+    WheeledRobot car(100, 10, 0);
+    car.move();
 }
