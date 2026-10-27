@@ -1,205 +1,138 @@
+
+
 #include <iostream>
+#include <string>
 
-int sensorReadings[4] = {20, 35, 42, 18};
+using namespace std;
 
-int moveForward(int position, int speed)
-{
-    return position + speed;
-}
-/*
-void drainBattery(int* battery)
-{
-    *battery = *battery - 10;
-}
-*/
-
-void drainBattery(int* battery)
-{
-    if (battery != nullptr)
-    {
-        *battery = *battery - 10;
-    }
-}
-
-void drainBattery(int& battery)
-{
-    battery = battery - 10;
-}
-
-class Robot
-{
-    private:
+class Robot {
+private:
+    int x;
+    int y;
     int battery;
-    int speed;
-    int position;
+    int direction; // 0 = North, 1 = East, 2 = South, 3 = West
 
-    public:
-    Robot(int startingBattery, int startingSpeed, int startingPosition)
-    {
+    string getDirectionName() {
+        if (direction == 0) return "North";
+        if (direction == 1) return "East";
+        if (direction == 2) return "South";
+        return "West";
+    }
+
+public:
+    Robot(int startingBattery) {
+        x = 0;
+        y = 0;
         battery = startingBattery;
-        speed = startingSpeed;
-        position = startingPosition;
-    }
-    virtual void move()
-{
-    std::cout << "Robot is moving!\n";
-}
-
-    int getPosition()
-    {
-        return position;
+        direction = 0;
     }
 
-    void drainBattery()
-    {
-        battery = battery - 10;
+    void moveForward() {
+        if (battery < 5) {
+            cout << "Not enough battery to move!\n";
+            return;
+        }
+
+        if (direction == 0) y++;
+        else if (direction == 1) x++;
+        else if (direction == 2) y--;
+        else x--;
+
+        battery -= 5;
+        cout << "Moved forward!\n";
     }
 
-    int getBattery()
-    {
-        return battery;
+    void moveBackward() {
+        if (battery < 5) {
+            cout << "Not enough battery to move!\n";
+            return;
+        }
+
+        if (direction == 0) y--;
+        else if (direction == 1) x--;
+        else if (direction == 2) y++;
+        else x++;
+
+        battery -= 5;
+        cout << "Moved backward!\n";
     }
 
-    void charge()
-    {
-        std::cout << "Charging...\n";
+    void turnLeft() {
+        direction = (direction + 3) % 4;
+        cout << "Turned left. Facing " << getDirectionName() << ".\n";
     }
 
-    void honk()
-    {
-        std::cout << "Beep beep!\n";
+    void turnRight() {
+        direction = (direction + 1) % 4;
+        cout << "Turned right. Facing " << getDirectionName() << ".\n";
     }
 
+    void chargeBattery() {
+        battery += 20;
+
+        if (battery > 100) {
+            battery = 100;
+        }
+
+        cout << "Battery charged to " << battery << "%.\n";
+    }
+
+    void showStatus() {
+        cout << "\n--- Robot Status ---\n";
+        cout << "Position: (" << x << ", " << y << ")\n";
+        cout << "Direction: " << getDirectionName() << "\n";
+        cout << "Battery: " << battery << "%\n";
+    }
 };
 
-class WheeledRobot : public Robot
-{
-    public:
-    WheeledRobot(int battery, int speed, int position)
-        : Robot(battery, speed, position)
-    {
+
+int main() {
+    Robot robot(100);
+    int choice = 0;
+
+    while (choice != 6) {
+        cout << "\n=== ROBOT COMMAND SIMULATOR ===\n";
+        cout << "1. Move forward\n";
+        cout << "2. Move backward\n";
+        cout << "3. Turn left\n";
+        cout << "4. Turn right\n";
+        cout << "5. Show status / charge battery\n";
+        cout << "6. Exit\n";
+        cout << "Enter command: ";
+
+        cin >> choice;
+
+        if (choice == 1) {
+            robot.moveForward();
+        }
+        else if (choice == 2) {
+            robot.moveBackward();
+        }
+        else if (choice == 3) {
+            robot.turnLeft();
+        }
+        else if (choice == 4) {
+            robot.turnRight();
+        }
+        else if (choice == 5) {
+            robot.showStatus();
+
+            cout << "Charge battery too? (1 = Yes, 0 = No): ";
+            int chargeChoice;
+            cin >> chargeChoice;
+
+            if (chargeChoice == 1) {
+                robot.chargeBattery();
+            }
+        }
+        else if (choice == 6) {
+            cout << "Shutting down robot. Goodbye!\n";
+        }
+        else {
+            cout << "Invalid command. Choose 1-6.\n";
+        }
     }
 
-    void honk()
-    {
-        std::cout << "Beep beeeeep!\n";
-    }
-    void move() override
-{
-    std::cout << "Wheeled robot is driving!\n";
-}
-};
-
-int main()
-{
-    std::cout << "Robot Command Simulator\n";
-    std::cout << "Robot online!\n";
-    int battery = 100;
-    int speed = 10;
-    int position = 0;
-    double temperature = 36.5;
-    bool active = true;
-    int time;
-
-    std::cout << "battery: " <<battery << "\n";
-    std::cout << "speed: " << speed << "\n";
-    std::cout << "position: " << position << "\n";
-    std::cout << "temperature: " << temperature << "\n";
-    std::cout << "active: " << active << "\n";
-
-    battery = battery - 20;
-
-     std::cout << "Battery after movement: " << battery << "\n";
-
-   // std::cout << "How many seconds should the robot move? ";
-
-   // std::cin >> time;
-
-   // position = speed * time;
-
-   // std::cout << "New position: " << position << "\n";
-
-    for (int i = 0; i < 5; i++)
-    {
-        position = moveForward(position, speed);
-        std::cout << "position = " << position << "\n";
-    }
-
-    for (int i = 0; i < 4; i++)
-    {
-        std::cout <<"i = " << i << " = " << "sensorReadings[" << i << "] = " << sensorReadings[i] << "\n";
-    }
-
-    for (int i = 0; i < 4; i++)
-    {   
-        std::cout << "Sensor " << i << ": " << sensorReadings[i] << " cm\n";
-    }
-
-    std::string command = "forward";
-    std::cout << "Command: " << command << "\n";
-
-    /*
-    std::string userCommand;
-    std::cout << "Enter a robot command: ";
-    std::cin >> userCommand;
-    std::cout << "Command received: " << userCommand << "\n";
-
-    
-    if (userCommand == "forward")
-    {
-        std::cout << "Robot moving forward!\n";
-    }
-    else if (userCommand == "backward")
-    {
-        std::cout << "Robot moving backward!\n";
-    }
-    else if (userCommand == "stop")
-    {
-        std::cout << "Robot is currently not moving!\n";
-    }
-    */
-
-    /*
-    int* batteryPtr = &battery;
-    *batteryPtr = 50;
-    drainBattery(&battery);
-
-    std::cout << "Battery address: " << &battery << "\n";
-    std::cout << "Battery pointer: " << batteryPtr << "\n";
-    std::cout << "Battery through pointer: " << *batteryPtr << "\n";
-    std::cout << "Battery: " << battery << "\n";
-    battery = battery - 10;
-    std::cout << "Drained battery address: " << &battery << "\n";
-    std::cout << "Drained battery pointer: " << *batteryPtr << "\n";
-    */
-
-    drainBattery(&battery);
-    std::cout << "Battery after draining: " << battery << "\n";
-
-    drainBattery(battery);
-    std::cout << "Battery after draining: " << battery << "\n";
-
-    Robot myRobot1(100, 10, 0);
-    myRobot1.move();
-    std::cout << "Robot1 position: " << myRobot1.getPosition() << "\n";
-    myRobot1.drainBattery();
-    std::cout << "Robot1 Battery: " << myRobot1.getBattery() << "\n";
-    
-    Robot myRobot2(75, 20, 50);
-    myRobot2.move();
-    std::cout << "Robot2 position: " << myRobot2.getPosition() << "\n";
-    myRobot2.drainBattery();
-    std::cout << "Robot2 Battery: " << myRobot2.getBattery() << "\n";
-    myRobot2.drainBattery();
-    std::cout << "Robot2 Battery: " << myRobot2.getBattery() << "\n";
-   
-    WheeledRobot myWheeledRobot(100, 10, 0);
-    myWheeledRobot.charge();
-    myWheeledRobot.move();
-    myWheeledRobot.honk();
-    std::cout << "Wheeled Robot position: " << myWheeledRobot.getPosition() << "\n";
     return 0;
-
-    WheeledRobot car(100, 10, 0);
-    car.move();
 }
+
